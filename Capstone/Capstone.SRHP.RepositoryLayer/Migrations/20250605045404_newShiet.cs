@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Capstone.HPTY.RepositoryLayer.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class newShiet : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,8 +23,8 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     DiscountPercentage = table.Column<decimal>(type: "decimal(5,2)", nullable: false, defaultValue: 0m),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Duration = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PointCost = table.Column<double>(type: "float", nullable: false, defaultValue: 0.0),
+                    Duration = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PointCost = table.Column<double>(type: "float", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
@@ -47,7 +47,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                     ImageURL = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     BasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false),
                     LastMaintainDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -93,27 +92,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.NotificationId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "NotificationTemplates",
-                columns: table => new
-                {
-                    TemplateId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    MessageTemplate = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    DefaultTargetType = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_NotificationTemplates", x => x.TemplateId);
                 });
 
             migrationBuilder.CreateTable(
@@ -409,6 +387,7 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                     IngredientId = table.Column<int>(type: "int", nullable: false),
                     InitialQuantity = table.Column<int>(type: "int", nullable: false),
                     RemainingQuantity = table.Column<int>(type: "int", nullable: false),
+                    ProvideCompany = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     BestBeforeDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     BatchNumber = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ReceivedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -762,9 +741,9 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SenderUserId = table.Column<int>(type: "int", nullable: false),
                     ReceiverUserId = table.Column<int>(type: "int", nullable: false),
-                    SessionId = table.Column<int>(type: "int", nullable: true),
+                    ChatSessionId = table.Column<int>(type: "int", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    IsBroadcast = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
@@ -773,8 +752,8 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 {
                     table.PrimaryKey("PK_ChatMessages", x => x.ChatMessageId);
                     table.ForeignKey(
-                        name: "FK_ChatMessages_ChatSessions_SessionId",
-                        column: x => x.SessionId,
+                        name: "FK_ChatMessages_ChatSessions_ChatSessionId",
+                        column: x => x.ChatSessionId,
                         principalTable: "ChatSessions",
                         principalColumn: "ChatSessionId",
                         onDelete: ReferentialAction.Cascade);
@@ -798,18 +777,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 {
                     FeedbackId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     ImageURL = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    Response = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
-                    ResponseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ManagerId = table.Column<int>(type: "int", nullable: true),
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    ApprovalStatus = table.Column<int>(type: "int", nullable: false),
-                    ApprovalDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ApprovedByUserId = table.Column<int>(type: "int", nullable: true),
-                    RejectionReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
@@ -823,11 +795,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                         principalTable: "Orders",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Feedback_Users_ApprovedByUserId",
-                        column: x => x.ApprovedByUserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId");
                     table.ForeignKey(
                         name: "FK_Feedback_Users_ManagerId",
                         column: x => x.ManagerId,
@@ -888,6 +855,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                     DamageFee = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     RentalNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ReturnCondition = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    VehicleId = table.Column<int>(type: "int", nullable: true),
+                    OrderSize = table.Column<int>(type: "int", nullable: true),
+                    VehicleAssignedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VehicleReturnedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    VehicleNotes = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDelete = table.Column<bool>(type: "bit", nullable: false)
@@ -901,6 +873,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                         principalTable: "Orders",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RentOrders_Vehicles_VehicleId",
+                        column: x => x.VehicleId,
+                        principalTable: "Vehicles",
+                        principalColumn: "VehicleId");
                 });
 
             migrationBuilder.CreateTable(
@@ -1195,14 +1172,14 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
 
             migrationBuilder.InsertData(
                 table: "Hotpots",
-                columns: new[] { "HotpotId", "BasePrice", "CreatedAt", "Description", "ImageURL", "IsDelete", "LastMaintainDate", "Material", "Name", "Price", "Quantity", "Size", "UpdatedAt" },
+                columns: new[] { "HotpotId", "BasePrice", "CreatedAt", "Description", "ImageURL", "IsDelete", "LastMaintainDate", "Material", "Name", "Price", "Size", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, 2200000m, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3571), "Nồi lẩu đồng truyền thống với hệ thống đốt than.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/noilaudongcodien.jpg?alt=media\\u0026token=6f345d27-7ff9-43e6-8beb-e50f29578436\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng", "Nồi Lẩu Đồng Cổ Điển", 730000m, 5, "M", null },
-                    { 2, 3170000m, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(4154), "Nồi lẩu điện với điều khiển nhiệt độ và lớp phủ chống dính.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/noi-lau-dien-sunhouse-shd4523-gia-re.jpg?alt=media\\u0026token=2d6c1dd9-c484-4dde-94a2-bdf52e511d0b\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thép Không Gỉ", "Nồi Lẩu Điện Hiện Đại", 1460000m, 2, "L", null },
-                    { 3, 1710000m, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(4178), "Nồi lẩu nhỏ gọn di động hoàn hảo cho du lịch hoặc các buổi tụ họp nhỏ.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/noi-lau-mini-lebenlang-lbec0808-shr-1000x1000.jpg?alt=media\\u0026token=92f6bcd1-169c-43c0-8e73-013cb8a68637\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Nhôm", "Nồi Lẩu Mini Di Động", 490000m, 2, "S", null },
-                    { 4, 3660000m, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(4213), "Nồi lẩu đa ngăn cho phép nấu nhiều loại nước lẩu khác nhau trong một nồi.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-hai-ngan.jpg?alt=media%token=4c530d54-dafd-45fe-8d77-7b6c45a81b5a\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thép Không Gỉ", "Nồi Lẩu Hai Ngăn", 1710000m, 2, "L", null },
-                    { 5, 1950000m, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(4247), "Nồi lẩu gốm truyền thống giữ nhiệt cực tốt.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau%20inox.jpg?alt=media\\u0026token=e4963f3f-5130-4485-9932-39cecd7a98af\",\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau%20inox%202.jpg?alt=media\\u0026token=4dda3d4c-3ba3-4cd0-96fc-d4ff505c5887\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Gốm", "Nồi Lẩu Gốm Truyền Thống", 980000m, 4, "M", null }
+                    { 1, 2200000m, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9273), "Nồi lẩu đồng truyền thống với hệ thống đốt than.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/noilaudongcodien.jpg?alt=media\\u0026token=6f345d27-7ff9-43e6-8beb-e50f29578436\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Đồng", "Nồi Lẩu Đồng Cổ Điển", 73000m, "M", null },
+                    { 2, 3170000m, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(53), "Nồi lẩu điện với điều khiển nhiệt độ và lớp phủ chống dính.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/noi-lau-dien-sunhouse-shd4523-gia-re.jpg?alt=media\\u0026token=2d6c1dd9-c484-4dde-94a2-bdf52e511d0b\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thép Không Gỉ", "Nồi Lẩu Điện Hiện Đại", 146000m, "L", null },
+                    { 3, 1710000m, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(294), "Nồi lẩu nhỏ gọn di động hoàn hảo cho du lịch hoặc các buổi tụ họp nhỏ.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/noi-lau-mini-lebenlang-lbec0808-shr-1000x1000.jpg?alt=media\\u0026token=92f6bcd1-169c-43c0-8e73-013cb8a68637\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Nhôm", "Nồi Lẩu Mini Di Động", 49000m, "S", null },
+                    { 4, 3660000m, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(360), "Nồi lẩu đa ngăn cho phép nấu nhiều loại nước lẩu khác nhau trong một nồi.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-hai-ngan.jpg?alt=media%token=4c530d54-dafd-45fe-8d77-7b6c45a81b5a\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Thép Không Gỉ", "Nồi Lẩu Hai Ngăn", 171000m, "L", null },
+                    { 5, 1950000m, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(416), "Nồi lẩu gốm truyền thống giữ nhiệt cực tốt.", "[\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau%20inox.jpg?alt=media\\u0026token=e4963f3f-5130-4485-9932-39cecd7a98af\",\"https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau%20inox%202.jpg?alt=media\\u0026token=4dda3d4c-3ba3-4cd0-96fc-d4ff505c5887\"]", false, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Gốm", "Nồi Lẩu Gốm Truyền Thống", 98000m, "M", null }
                 });
 
             migrationBuilder.InsertData(
@@ -1210,14 +1187,14 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "IngredientTypeId", "CreatedAt", "IsDelete", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6623), false, "Nước Lẩu", null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6626), false, "Hải Sản", null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6627), false, "Rau Củ", null },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6628), false, "Mì", null },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6629), false, "Đậu Phụ", null },
-                    { 6, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6629), false, "Nấm", null },
-                    { 7, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6630), false, "Thịt", null },
-                    { 8, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6630), false, "Nước Chấm", null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1048), false, "Nước Lẩu", null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1052), false, "Hải Sản", null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1053), false, "Rau Củ", null },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1054), false, "Mì", null },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1055), false, "Đậu Phụ", null },
+                    { 6, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1056), false, "Nấm", null },
+                    { 7, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1056), false, "Thịt", null },
+                    { 8, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1057), false, "Nước Chấm", null }
                 });
 
             migrationBuilder.InsertData(
@@ -1225,10 +1202,10 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "RoleId", "CreatedAt", "IsDelete", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 32, 934, DateTimeKind.Utc).AddTicks(4601), false, "Admin", null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 32, 934, DateTimeKind.Utc).AddTicks(4612), false, "Manager", null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 32, 934, DateTimeKind.Utc).AddTicks(4613), false, "Staff", null },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 32, 934, DateTimeKind.Utc).AddTicks(4614), false, "Customer", null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 0, 125, DateTimeKind.Utc).AddTicks(3073), false, "Admin", null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 0, 125, DateTimeKind.Utc).AddTicks(3081), false, "Manager", null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 0, 125, DateTimeKind.Utc).AddTicks(3081), false, "Staff", null },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 0, 125, DateTimeKind.Utc).AddTicks(3082), false, "Customer", null }
                 });
 
             migrationBuilder.InsertData(
@@ -1236,13 +1213,13 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "SizeDiscountId", "CreatedAt", "DiscountPercentage", "EndDate", "IsDelete", "MinSize", "StartDate", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7113), 4.00m, null, false, 2, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7114) },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7117), 8.00m, null, false, 4, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7118) },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7120), 12.00m, null, false, 6, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7121) },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7150), 16.00m, null, false, 8, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7151) },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7153), 20.00m, null, false, 10, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7154) },
-                    { 6, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7156), 24.00m, null, false, 15, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7156) },
-                    { 7, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7158), 28.00m, null, false, 20, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7159) }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5349), 4.00m, null, false, 2, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5350) },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5354), 6.00m, null, false, 4, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5354) },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5356), 8.00m, null, false, 6, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5357) },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5359), 10.00m, null, false, 8, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5359) },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5362), 12.00m, null, false, 10, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5362) },
+                    { 6, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5364), 15.00m, null, false, 15, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5365) },
+                    { 7, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5367), 20.00m, null, false, 20, new DateTime(2023, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5368) }
                 });
 
             migrationBuilder.InsertData(
@@ -1250,11 +1227,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "TurtorialVideoId", "CreatedAt", "Description", "IsDelete", "Name", "UpdatedAt", "VideoURL" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3436), "Hướng dẫn toàn diện về cách thiết lập và sử dụng nồi lẩu truyền thống.", false, "Cách Sử Dụng Nồi Lẩu Truyền Thống", null, "https://www.youtube.com/watch?v=traditional-hotpot-guide" },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3443), "Học cách thiết lập và sử dụng nồi lẩu điện an toàn.", false, "Hướng Dẫn Thiết Lập Nồi Lẩu Điện", null, "https://www.youtube.com/watch?v=electric-hotpot-setup" },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3444), "Mẹo và thủ thuật để sử dụng nồi lẩu di động ở bất kỳ đâu.", false, "Nồi Lẩu Di Động Mọi Lúc Mọi Nơi", null, "https://www.youtube.com/watch?v=portable-hotpot-guide" },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3445), "Cách sử dụng hiệu quả tất cả các ngăn trong nồi lẩu đa ngăn của bạn.", false, "Làm Chủ Nồi Lẩu Đa Ngăn", null, "https://www.youtube.com/watch?v=multi-compartment-guide" },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3446), "Học cách chăm sóc và bảo quản nồi lẩu gốm đúng cách.", false, "Hướng Dẫn Chăm Sóc Nồi Lẩu Gốm", null, "https://www.youtube.com/watch?v=ceramic-hotpot-care" }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9188), "Hướng dẫn toàn diện về cách thiết lập và sử dụng nồi lẩu truyền thống.", false, "Cách Sử Dụng Nồi Lẩu Truyền Thống", null, "https://www.youtube.com/watch?v=traditional-hotpot-guide" },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9197), "Học cách thiết lập và sử dụng nồi lẩu điện an toàn.", false, "Hướng Dẫn Thiết Lập Nồi Lẩu Điện", null, "https://www.youtube.com/watch?v=electric-hotpot-setup" },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9198), "Mẹo và thủ thuật để sử dụng nồi lẩu di động ở bất kỳ đâu.", false, "Nồi Lẩu Di Động Mọi Lúc Mọi Nơi", null, "https://www.youtube.com/watch?v=portable-hotpot-guide" },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9199), "Cách sử dụng hiệu quả tất cả các ngăn trong nồi lẩu đa ngăn của bạn.", false, "Làm Chủ Nồi Lẩu Đa Ngăn", null, "https://www.youtube.com/watch?v=multi-compartment-guide" },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9200), "Học cách chăm sóc và bảo quản nồi lẩu gốm đúng cách.", false, "Hướng Dẫn Chăm Sóc Nồi Lẩu Gốm", null, "https://www.youtube.com/watch?v=ceramic-hotpot-care" }
                 });
 
             migrationBuilder.InsertData(
@@ -1262,11 +1239,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "UtensilTypeId", "CreatedAt", "IsDelete", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3355), false, "Đũa", null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3360), false, "Muôi", null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3361), false, "Vợt", null },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3362), false, "Bát", null },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(3362), false, "Đĩa", null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9099), false, "Đũa", null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9104), false, "Muôi", null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9106), false, "Vợt", null },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9107), false, "Bát", null },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 496, DateTimeKind.Utc).AddTicks(9108), false, "Đĩa", null }
                 });
 
             migrationBuilder.InsertData(
@@ -1274,16 +1251,27 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "VehicleId", "CreatedAt", "IsDelete", "LicensePlate", "Name", "Notes", "Status", "Type", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7214), false, "59P1-12345", "Honda Wave Alpha", "Xe máy giao hàng tiêu chuẩn, màu xanh dương, đã được bảo dưỡng tháng 3/2025", 1, 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7215) },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7217), false, "59P2-23456", "Yamaha Sirius", "Xe máy giao hàng nhanh, màu đỏ, tiết kiệm nhiên liệu", 1, 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7218) },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7220), false, "59P2-34567", "Honda Vision", "Xe tay ga dành cho đơn hàng nhỏ, màu trắng, có thùng hàng 60L", 2, 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7220) },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7222), false, "59P3-45678", "Suzuki Raider", "Xe máy giao hàng tốc độ cao, phù hợp cho đơn hàng khẩn cấp", 1, 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7223) },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7225), false, "51A-12345", "Toyota Vios", "Xe ô tô 4 chỗ, phù hợp cho đơn hàng lớn hoặc khoảng cách xa", 1, 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7225) },
-                    { 6, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7227), false, "51A-23456", "Mitsubishi Xpander", "Xe ô tô 7 chỗ, đang trong quá trình bảo dưỡng định kỳ, sẽ sẵn sàng vào 25/04/2025", 1, 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7227) },
-                    { 7, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7229), false, "59P3-56789", "Honda SH Mode", "Xe tay ga cao cấp, phù hợp cho giao hàng trong khu vực trung tâm thành phố", 1, 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7230) },
-                    { 8, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7231), false, "51A-34567", "Ford Ranger", "Xe bán tải, phù hợp cho vận chuyển hàng hóa lớn và đường xa", 1, 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7232) },
-                    { 9, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7234), false, "59P4-67890", "Piaggio Vespa", "Xe tay ga phong cách Ý, phù hợp cho giao hàng cao cấp", 1, 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7234) },
-                    { 10, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7236), false, "51A-45678", "Hyundai Accent", "Xe sedan 4 chỗ, tiết kiệm nhiên liệu, phù hợp cho giao hàng khoảng cách xa", 1, 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7236) }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5563), false, "59P1-12345", "Honda Wave Alpha", "Xe máy giao hàng tiêu chuẩn, màu xanh dương, đã được bảo dưỡng tháng 3/2025", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5564) },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5567), false, "59P2-23456", "Yamaha Sirius", "Xe máy giao hàng nhanh, màu đỏ, tiết kiệm nhiên liệu", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5567) },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5569), false, "59P2-34567", "Honda Vision", "Xe tay ga dành cho đơn hàng nhỏ, màu trắng, có thùng hàng 60L", 2, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5570) },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5571), false, "59P3-45678", "Suzuki Raider", "Xe máy giao hàng tốc độ cao, phù hợp cho đơn hàng khẩn cấp", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5572) },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5573), false, "51A-12345", "Toyota Vios", "Xe ô tô 4 chỗ, phù hợp cho đơn hàng lớn hoặc khoảng cách xa", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5574) },
+                    { 6, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5576), false, "51A-23456", "Mitsubishi Xpander", "Xe ô tô 7 chỗ, đang trong quá trình bảo dưỡng định kỳ, sẽ sẵn sàng vào 25/04/2025", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5576) },
+                    { 7, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5578), false, "59P3-56789", "Honda SH Mode", "Xe tay ga cao cấp, phù hợp cho giao hàng trong khu vực trung tâm thành phố", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5578) },
+                    { 8, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5580), false, "51A-34567", "Ford Ranger", "Xe bán tải, phù hợp cho vận chuyển hàng hóa lớn và đường xa", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5581) },
+                    { 9, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5582), false, "59P4-67890", "Piaggio Vespa", "Xe tay ga phong cách Ý, phù hợp cho giao hàng cao cấp", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5583) },
+                    { 10, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5585), false, "51A-45678", "Hyundai Accent", "Xe sedan 4 chỗ, tiết kiệm nhiên liệu, phù hợp cho giao hàng khoảng cách xa", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5585) },
+                    { 11, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5587), false, "51A-56789", "Kia Morning", "Xe nhỏ gọn, di chuyển linh hoạt trong nội thành", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5587) },
+                    { 12, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5589), false, "59P5-12345", "SYM Elegant", "Xe số tiết kiệm nhiên liệu, dễ bảo trì", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5589) },
+                    { 13, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5591), false, "51H-67890", "Mazda CX-5", "Xe SUV 5 chỗ, phù hợp vận chuyển hàng hóa trong điều kiện thời tiết xấu", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5592) },
+                    { 14, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5594), false, "59P6-23456", "Yamaha Janus", "Xe tay ga tiết kiệm nhiên liệu, nhẹ và dễ lái", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5594) },
+                    { 15, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5596), false, "59P6-34567", "Honda Air Blade", "Xe tay ga mạnh mẽ, thích hợp giao hàng ngoài giờ cao điểm", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5596) },
+                    { 16, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5598), false, "59X1-45678", "VinFast Klara", "Xe máy điện thân thiện môi trường, hoạt động tốt trong thành phố", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5598) },
+                    { 17, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5612), false, "51G-78901", "Chevrolet Spark", "Xe nhỏ gọn 4 chỗ, phù hợp giao hàng trong khu dân cư đông đúc", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5612) },
+                    { 18, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5614), false, "51A-89012", "Hyundai Grand i10", "Xe hatchback nhỏ gọn, dễ dàng đỗ xe và di chuyển", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5614) },
+                    { 19, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5616), false, "51C-34567", "Suzuki Carry Truck", "Xe tải nhẹ chuyên dùng giao hàng cồng kềnh trong thành phố", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5617) },
+                    { 20, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5618), false, "59P7-56789", "Yamaha Exciter", "Xe số phân khối lớn, phù hợp cho giao hàng nhanh và xa", 1, 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5619) },
+                    { 21, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5621), false, "60F3-56874", "Ferrari La Ferrari", "Siêu xe, lái cho vui :))", 1, 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5621) }
                 });
 
             migrationBuilder.InsertData(
@@ -1291,21 +1279,43 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "HotPotInventoryId", "CreatedAt", "HotpotId", "IsDelete", "SeriesNumber", "Status", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6249), 1, false, "CP-2023-0001", 0, null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6265), 1, false, "CP-2023-0002", 0, null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6270), 2, false, "EL-2023-0001", 0, null },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6271), 2, false, "EL-2023-0002", 0, null },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6272), 3, false, "PT-2023-0001", 0, null },
-                    { 6, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6273), 4, false, "MC-2023-0001", 0, null },
-                    { 7, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6274), 5, false, "CR-2023-0001", 0, null },
-                    { 8, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6408), 1, false, "CP-2023-0003", 0, null },
-                    { 9, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6409), 1, false, "CP-2023-0004", 2, null },
-                    { 10, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6410), 1, false, "CP-2023-0005", 2, null },
-                    { 11, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6411), 3, false, "PT-2023-0002", 0, null },
-                    { 12, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6412), 4, false, "MC-2023-0002", 0, null },
-                    { 13, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6413), 5, false, "CR-2023-0002", 0, null },
-                    { 14, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6414), 5, false, "CR-2023-0003", 0, null },
-                    { 15, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6415), 5, false, "CR-2023-0004", 2, null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(653), 1, false, "CP-2023-0001", 0, null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(666), 1, false, "CP-2023-0002", 0, null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(673), 1, false, "CP-2023-0003", 0, null },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(675), 1, false, "CP-2023-0004", 0, null },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(676), 1, false, "CP-2023-0005", 0, null },
+                    { 6, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(677), 1, false, "CP-2023-0006", 0, null },
+                    { 7, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(678), 1, false, "CP-2023-0007", 0, null },
+                    { 8, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(679), 1, false, "CP-2023-0008", 0, null },
+                    { 9, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(680), 1, false, "CP-2023-0009", 0, null },
+                    { 10, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(681), 1, false, "CP-2023-0010", 0, null },
+                    { 11, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(682), 2, false, "EL-2023-0001", 0, null },
+                    { 12, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(683), 2, false, "EL-2023-0002", 0, null },
+                    { 13, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(685), 2, false, "EL-2023-0003", 0, null },
+                    { 14, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(686), 2, false, "EL-2023-0004", 0, null },
+                    { 15, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(687), 2, false, "EL-2023-0005", 0, null },
+                    { 16, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(688), 2, false, "EL-2023-0002", 0, null },
+                    { 17, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(689), 3, false, "PT-2023-0001", 0, null },
+                    { 18, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(690), 3, false, "PT-2023-0002", 0, null },
+                    { 19, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(691), 3, false, "PT-2023-0003", 0, null },
+                    { 20, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(692), 3, false, "PT-2023-0004", 0, null },
+                    { 21, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(693), 3, false, "PT-2023-0005", 0, null },
+                    { 22, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(694), 3, false, "PT-2023-0006", 0, null },
+                    { 23, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(695), 3, false, "PT-2023-0007", 0, null },
+                    { 24, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(696), 3, false, "PT-2023-0008", 0, null },
+                    { 25, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(697), 3, false, "PT-2023-0009", 0, null },
+                    { 26, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(698), 3, false, "PT-2023-0010", 0, null },
+                    { 27, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(700), 4, false, "MC-2023-0001", 0, null },
+                    { 28, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(701), 4, false, "MC-2023-0002", 0, null },
+                    { 29, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(702), 4, false, "MC-2023-0003", 0, null },
+                    { 30, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(703), 4, false, "MC-2023-0004", 0, null },
+                    { 31, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(704), 4, false, "MC-2023-0005", 0, null },
+                    { 32, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(705), 5, false, "CR-2023-0001", 0, null },
+                    { 33, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(706), 5, false, "CR-2023-0002", 0, null },
+                    { 34, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(707), 5, false, "CR-2023-0003", 0, null },
+                    { 35, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(708), 5, false, "CR-2023-0004", 2, null },
+                    { 36, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(709), 5, false, "CR-2023-0005", 0, null },
+                    { 37, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(710), 5, false, "CR-2023-0006", 0, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1313,30 +1323,30 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "IngredientId", "CreatedAt", "Description", "ImageURL", "IngredientTypeId", "IsDelete", "MeasurementValue", "MinStockLevel", "Name", "Unit", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6684), "Thịt bò cao cấp cắt lát mỏng hoàn hảo cho lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/89d16277-5f5d-45f0-9be4-6d710ecf2eaa.png?alt=media&token=a0db0650-a99e-4044-8552-88b096956487", 7, false, 250.0, 20, "Thịt Bò Cắt Lát", "g", null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6691), "Thịt cừu mềm cắt lát, hoàn hảo cho nấu nhanh.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/thit-cuu-cat-lat.jpg?alt=media&token=c2d6bbbd-b69d-450a-8d0e-396b135f35f3", 7, false, 250.0, 15, "Thịt Cừu Cắt Lát", "g", null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6692), "Thịt ba chỉ heo cắt mỏng với tỷ lệ mỡ-thịt hoàn hảo.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/ba-chi-heo.png?alt=media&token=83bbc055-4726-4c68-8ede-f0a0ea17c2d4", 7, false, 250.0, 15, "Ba Chỉ Heo", "g", null },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6694), "Tôm tươi, đã bóc vỏ và làm sạch.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/shrimps.jpg?alt=media&token=3ef01d1a-0df5-4f5a-b8db-b1fe34ae89ca", 2, false, 200.0, 20, "Tôm", "g", null },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6695), "Cá viên đàn hồi làm từ cá tươi xay.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/C%C3%A1-vi%C3%AAn-g%E1%BA%A7n-nh%C6%B0-%C4%91%C6%B0%E1%BB%A3c-l%C3%A0m-m%C3%B3n-%C4%83n-ph%E1%BB%95-bi%E1%BA%BFn-nh%C6%B0-c%C3%A1-vi%C3%AAn-chi%C3%AAn.jpg?alt=media&token=98bd96d8-124e-4883-afa0-4482913cadfa", 2, false, 300.0, 30, "Cá Viên", "g", null },
-                    { 6, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6696), "Mực tươi cắt thành khoanh.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/M%E1%BB%B1c-t%C6%B0%C6%A1i-2-532x532.jpg?alt=media&token=1cd9d76a-0435-4fc3-b773-64af8b515e76", 2, false, 200.0, 15, "Mực", "g", null },
-                    { 7, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6698), "Rau giòn, lá xanh hoàn hảo cho lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/1ad2d8b1-30c1-45c6-aa26-fe898a065120.png?alt=media&token=918e0ce5-e455-4391-9d17-f7430b41c195", 3, false, 400.0, 25, "Cải Thảo", "g", null },
-                    { 8, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6699), "Rau chân vịt tươi, đã rửa sạch và sẵn sàng để nấu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/spinach.png?alt=media&token=4ae0c9f7-e3a3-48bc-b56a-8594a0d081f2", 3, false, 300.0, 20, "Rau Chân Vịt", "g", null },
-                    { 9, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6700), "Bắp ngọt cắt thành miếng vừa ăn.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/corn.jpg?alt=media&token=3d64d225-6be7-4c8f-b8b4-8b19a220d09b", 3, false, 250.0, 15, "Bắp", "g", null },
-                    { 10, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6701), "Mì lúa mì Nhật Bản dày và dai.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/udon.png?alt=media&token=c05be1ca-db95-4dd2-8d36-c9567b3f7ea0", 4, false, 300.0, 20, "Mì Udon", "g", null },
-                    { 11, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6702), "Miến trong suốt làm từ tinh bột đậu xanh.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/1663922149_8W3viNBAwDyUEHTj_1663931837-php9bcja8.png?alt=media&token=8a3b05d0-3cdb-4916-b451-f1ee01d38cbf", 4, false, 200.0, 20, "Miến", "g", null },
-                    { 12, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6704), "Mì lúa mì xoăn hoàn hảo cho lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/mi-ramen-luoc-cap-dong%20(2).png?alt=media&token=5826d348-02c2-4ded-b350-c70cc7ebc42e", 4, false, 250.0, 25, "Mì Ramen", "g", null },
-                    { 13, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6705), "Đậu phụ cứng cắt khối giữ nguyên hình dạng trong lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/tofu.png?alt=media&token=31b50c1e-c030-43a7-9eed-a9543f30b51d", 5, false, 300.0, 15, "Đậu Phụ Cứng", "g", null },
-                    { 14, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6706), "Đậu phụ chiên giòn hấp thụ hương vị nước lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/fried-tofu.png?alt=media&token=e645c47c-95f5-4a45-9407-4d99464e0023", 5, false, 250.0, 15, "Đậu Phụ Chiên", "g", null },
-                    { 15, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6707), "Nấm hương thơm ngon, tươi hoặc khô.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/mnam-huong.png?alt=media&token=f6e2ec47-ad19-4688-b20b-ffba6ae5fd7a", 6, false, 200.0, 15, "Nấm Hương", "g", null },
-                    { 16, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6708), "Nấm kim châm mỏng, thân dài.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/nam-kim-cham.png?alt=media&token=060215f1-02b2-402e-83e4-ba93d2535928", 6, false, 150.0, 15, "Nấm Kim Châm", "g", null },
-                    { 17, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6710), "Nước lẩu cay truyền thống với hạt tiêu Tứ Xuyên và dầu ớt.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-tu-xuyen-cay.png?alt=media&token=cb8f5064-ee26-499b-8fe9-f3f4a6adc473", 1, false, 500.0, 10, "Nước Lẩu Tứ Xuyên Cay", "ml", null },
-                    { 18, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6711), "Nước lẩu cà chua chua ngọt.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-ca-chua.png?alt=media&token=8fcf88b3-6128-4689-aab0-e64a48ce8b5a", 1, false, 500.0, 10, "Nước Lẩu Cà Chua", "ml", null },
-                    { 19, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6712), "Nước lẩu đậm đà làm từ nhiều loại nấm.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-nam.jpg?alt=media&token=d2080167-804c-4909-9bef-1d7e8e7dcfdc", 1, false, 500.0, 10, "Nước Lẩu Nấm", "ml", null },
-                    { 20, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6713), "Nước lẩu nhẹ, trong làm từ xương hầm nhiều giờ.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-xuong-trong.jpg?alt=media&token=49407a13-5f3e-47a0-8126-bab93c157b69", 1, false, 500.0, 10, "Nước Lẩu Xương Trong", "ml", null },
-                    { 21, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6714), "Sốt kem làm từ hạt mè xay.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/sot-me.jpg?alt=media&token=560bf6c4-26fb-4adb-b543-308089fd0e40", 8, false, 200.0, 10, "Sốt Mè", "ml", null },
-                    { 22, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6716), "Nước tương pha với tỏi băm.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/sot-tuong-toi.png?alt=media&token=fe07fff2-694d-420f-aea0-9bd6723f0798", 8, false, 250.0, 10, "Nước Tương Tỏi", "ml", null },
-                    { 23, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6717), "Dầu cay làm từ ớt ngâm dầu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/dau-ot.png?alt=media&token=0ed694a6-cdfe-4a7a-b788-8f679ab5a86f", 8, false, 150.0, 10, "Dầu Ớt", "ml", null },
-                    { 24, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6718), "Sốt đậm đà làm từ dầu đậu nành, tỏi, hành và hải sản khô.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/sot-sa-te.png?alt=media&token=fae51735-1dc5-4fb2-b950-27163f9eebdc", 8, false, 200.0, 10, "Tương Sa Tế", "ml", null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1170), "Thịt bò cao cấp cắt lát mỏng hoàn hảo cho lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/89d16277-5f5d-45f0-9be4-6d710ecf2eaa.png?alt=media&token=a0db0650-a99e-4044-8552-88b096956487", 7, false, 250.0, 20, "Thịt Bò Cắt Lát", "g", null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1179), "Thịt cừu mềm cắt lát, hoàn hảo cho nấu nhanh.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/thit-cuu-cat-lat.jpg?alt=media&token=c2d6bbbd-b69d-450a-8d0e-396b135f35f3", 7, false, 250.0, 15, "Thịt Cừu Cắt Lát", "g", null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1181), "Thịt ba chỉ heo cắt mỏng với tỷ lệ mỡ-thịt hoàn hảo.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/ba-chi-heo.png?alt=media&token=83bbc055-4726-4c68-8ede-f0a0ea17c2d4", 7, false, 250.0, 15, "Ba Chỉ Heo", "g", null },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1183), "Tôm tươi, đã bóc vỏ và làm sạch.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/shrimps.jpg?alt=media&token=3ef01d1a-0df5-4f5a-b8db-b1fe34ae89ca", 2, false, 200.0, 20, "Tôm", "g", null },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1185), "Cá viên đàn hồi làm từ cá tươi xay.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/C%C3%A1-vi%C3%AAn-g%E1%BA%A7n-nh%C6%B0-%C4%91%C6%B0%E1%BB%A3c-l%C3%A0m-m%C3%B3n-%C4%83n-ph%E1%BB%95-bi%E1%BA%BFn-nh%C6%B0-c%C3%A1-vi%C3%AAn-chi%C3%AAn.jpg?alt=media&token=98bd96d8-124e-4883-afa0-4482913cadfa", 2, false, 300.0, 30, "Cá Viên", "g", null },
+                    { 6, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1186), "Mực tươi cắt thành khoanh.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/M%E1%BB%B1c-t%C6%B0%C6%A1i-2-532x532.jpg?alt=media&token=1cd9d76a-0435-4fc3-b773-64af8b515e76", 2, false, 200.0, 15, "Mực", "g", null },
+                    { 7, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1189), "Rau giòn, lá xanh hoàn hảo cho lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/1ad2d8b1-30c1-45c6-aa26-fe898a065120.png?alt=media&token=918e0ce5-e455-4391-9d17-f7430b41c195", 3, false, 400.0, 25, "Cải Thảo", "g", null },
+                    { 8, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1193), "Rau chân vịt tươi, đã rửa sạch và sẵn sàng để nấu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/spinach.png?alt=media&token=4ae0c9f7-e3a3-48bc-b56a-8594a0d081f2", 3, false, 300.0, 20, "Rau Chân Vịt", "g", null },
+                    { 9, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1194), "Bắp ngọt cắt thành miếng vừa ăn.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/corn.jpg?alt=media&token=3d64d225-6be7-4c8f-b8b4-8b19a220d09b", 3, false, 250.0, 15, "Bắp", "g", null },
+                    { 10, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1195), "Mì lúa mì Nhật Bản dày và dai.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/udon.png?alt=media&token=c05be1ca-db95-4dd2-8d36-c9567b3f7ea0", 4, false, 300.0, 20, "Mì Udon", "g", null },
+                    { 11, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1197), "Miến trong suốt làm từ tinh bột đậu xanh.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/1663922149_8W3viNBAwDyUEHTj_1663931837-php9bcja8.png?alt=media&token=8a3b05d0-3cdb-4916-b451-f1ee01d38cbf", 4, false, 200.0, 20, "Miến", "g", null },
+                    { 12, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1198), "Mì lúa mì xoăn hoàn hảo cho lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/mi-ramen-luoc-cap-dong%20(2).png?alt=media&token=5826d348-02c2-4ded-b350-c70cc7ebc42e", 4, false, 250.0, 25, "Mì Ramen", "g", null },
+                    { 13, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1199), "Đậu phụ cứng cắt khối giữ nguyên hình dạng trong lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/tofu.png?alt=media&token=31b50c1e-c030-43a7-9eed-a9543f30b51d", 5, false, 300.0, 15, "Đậu Phụ Cứng", "g", null },
+                    { 14, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1200), "Đậu phụ chiên giòn hấp thụ hương vị nước lẩu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/fried-tofu.png?alt=media&token=e645c47c-95f5-4a45-9407-4d99464e0023", 5, false, 250.0, 15, "Đậu Phụ Chiên", "g", null },
+                    { 15, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1202), "Nấm hương thơm ngon, tươi hoặc khô.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/mnam-huong.png?alt=media&token=f6e2ec47-ad19-4688-b20b-ffba6ae5fd7a", 6, false, 200.0, 15, "Nấm Hương", "g", null },
+                    { 16, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1203), "Nấm kim châm mỏng, thân dài.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/nam-kim-cham.png?alt=media&token=060215f1-02b2-402e-83e4-ba93d2535928", 6, false, 150.0, 15, "Nấm Kim Châm", "g", null },
+                    { 17, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1204), "Nước lẩu cay truyền thống với hạt tiêu Tứ Xuyên và dầu ớt.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-tu-xuyen-cay.png?alt=media&token=cb8f5064-ee26-499b-8fe9-f3f4a6adc473", 1, false, 500.0, 10, "Nước Lẩu Tứ Xuyên Cay", "ml", null },
+                    { 18, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1206), "Nước lẩu cà chua chua ngọt.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-ca-chua.png?alt=media&token=8fcf88b3-6128-4689-aab0-e64a48ce8b5a", 1, false, 500.0, 10, "Nước Lẩu Cà Chua", "ml", null },
+                    { 19, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1207), "Nước lẩu đậm đà làm từ nhiều loại nấm.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-nam.jpg?alt=media&token=d2080167-804c-4909-9bef-1d7e8e7dcfdc", 1, false, 500.0, 10, "Nước Lẩu Nấm", "ml", null },
+                    { 20, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1208), "Nước lẩu nhẹ, trong làm từ xương hầm nhiều giờ.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/lau-xuong-trong.jpg?alt=media&token=49407a13-5f3e-47a0-8126-bab93c157b69", 1, false, 500.0, 10, "Nước Lẩu Xương Trong", "ml", null },
+                    { 21, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1209), "Sốt kem làm từ hạt mè xay.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/sot-me.jpg?alt=media&token=560bf6c4-26fb-4adb-b543-308089fd0e40", 8, false, 200.0, 10, "Sốt Mè", "ml", null },
+                    { 22, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1211), "Nước tương pha với tỏi băm.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/sot-tuong-toi.png?alt=media&token=fe07fff2-694d-420f-aea0-9bd6723f0798", 8, false, 250.0, 10, "Nước Tương Tỏi", "ml", null },
+                    { 23, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1212), "Dầu cay làm từ ớt ngâm dầu.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/dau-ot.png?alt=media&token=0ed694a6-cdfe-4a7a-b788-8f679ab5a86f", 8, false, 150.0, 10, "Dầu Ớt", "ml", null },
+                    { 24, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1213), "Sốt đậm đà làm từ dầu đậu nành, tỏi, hành và hải sản khô.", "https://firebasestorage.googleapis.com/v0/b/foodshop-aa498.appspot.com/o/sot-sa-te.png?alt=media&token=fae51735-1dc5-4fb2-b950-27163f9eebdc", 8, false, 200.0, 10, "Tương Sa Tế", "ml", null }
                 });
 
             migrationBuilder.InsertData(
@@ -1344,20 +1354,20 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "UserId", "Address", "CreatedAt", "Email", "ImageURL", "IsDelete", "LoyatyPoint", "Name", "Note", "Password", "PhoneNumber", "RefreshToken", "RefreshTokenExpiry", "RoleId", "StaffType", "UpdatedAt", "WorkDays" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2025, 5, 19, 21, 15, 32, 934, DateTimeKind.Utc).AddTicks(4770), "Admin@gmail.com", null, false, null, "Admin", null, "$2a$12$ULKCz/gUooEZOZgHMgN8z.omhaLJbN7/hSx2zOmYosEyepCADwiCG", "987654321", null, null, 1, null, null, null },
-                    { 2, null, new DateTime(2025, 5, 19, 21, 15, 33, 185, DateTimeKind.Utc).AddTicks(2193), "Manager1@gmail.com", null, false, null, "Nguyễn Văn Quân", null, "$2a$12$h0Gt/rkXvb9d9VEKkBSwBe5fFEd4e0TQxaePLFOinNirF7Uy0ZJ9.", "999999999", null, null, 2, null, null, null },
-                    { 3, null, new DateTime(2025, 5, 19, 21, 15, 33, 442, DateTimeKind.Utc).AddTicks(9121), "Manager2@gmail.com", null, false, null, "Trần Thị Thu", null, "$2a$12$wNenfg.Oy3aJHsLxU1sraO4Zy0eAjq42wDVZckZWLECLW8hlbEb7u", "888888888", null, null, 2, null, null, null },
-                    { 4, null, new DateTime(2025, 5, 19, 21, 15, 33, 691, DateTimeKind.Utc).AddTicks(2197), "Staff1@gmail.com", null, false, null, "Lê Minh Hoàng", null, "$2a$12$.xlblFxGOvZvi/yt/HsRuuSY.s2aAITK0TPKueaVXlCoi6ZPCwp.W", "777777777", null, null, 3, 1, null, null },
-                    { 5, null, new DateTime(2025, 5, 19, 21, 15, 33, 937, DateTimeKind.Utc).AddTicks(2858), "Staff2@gmail.com", null, false, null, "Phạm Thị Hằng", null, "$2a$12$ha5WFYAahaMSnF1nXrdlsuGv3zxsxusD5KqVBWleTrhpd3rcI0qUe", "666666666", null, null, 3, 1, null, null },
-                    { 6, null, new DateTime(2025, 5, 19, 21, 15, 34, 180, DateTimeKind.Utc).AddTicks(2641), "Staff3@gmail.com", null, false, null, "Ngô Văn Cường", null, "$2a$12$xLr3XOgexepVJSiONAUZmumd9VaSZkHQ06IxzH9/bC0Qd6AESDjLS", "555555555", null, null, 3, 2, null, null },
-                    { 7, null, new DateTime(2025, 5, 19, 21, 15, 34, 427, DateTimeKind.Utc).AddTicks(3098), "Staff4@gmail.com", null, false, null, "Đinh Thị Hà", null, "$2a$12$YazWmc8/cBia4X0ewL805eg9DfEVzJmz2Y0EK5JWMS0WQ4Kvg6Msi", "444444444", null, null, 3, 2, null, null },
-                    { 8, null, new DateTime(2025, 5, 19, 21, 15, 35, 776, DateTimeKind.Utc).AddTicks(8407), "Customer1@gmail.com", null, false, null, "Đặng Văn Nam", null, "$2a$12$bG9rWIU/u.PrCKmcPOOjau0otpIXuvnkUQYuqCkwBgojwzb2OLkba", "333333333", null, null, 4, null, null, null },
-                    { 9, null, new DateTime(2025, 5, 19, 21, 15, 36, 73, DateTimeKind.Utc).AddTicks(8990), "Customer2@gmail.com", null, false, null, "Lý Thị Ngọc", null, "$2a$12$dEpY8sP.l8DiU2dEg3IKAOcK6yydFxYrDoClLjqAirrWf9K4yrh1m", "222222222", null, null, 4, null, null, null },
-                    { 10, null, new DateTime(2025, 5, 19, 21, 15, 36, 345, DateTimeKind.Utc).AddTicks(2939), "Customer3@gmail.com", null, false, 200.0, "Phan Minh Đức", null, "$2a$12$M4iAAOT3o0PwHrOgeUmHjOUUo6AY1v8w6.yfVlMBQkmKjTxrsoLTq", "111111111", null, null, 4, null, null, null },
-                    { 18, null, new DateTime(2025, 5, 19, 21, 15, 34, 714, DateTimeKind.Utc).AddTicks(6233), "Staff5@gmail.com", null, false, null, "Võ Anh Dũng", null, "$2a$12$ZrQvU5h2yuqN.vrrUYM9pO/JW.ix2uRM6Cb1Gf.gVqKsWSqh9aPqy", "0901234567", null, null, 3, 1, null, null },
-                    { 19, null, new DateTime(2025, 5, 19, 21, 15, 34, 971, DateTimeKind.Utc).AddTicks(1267), "Staff6@gmail.com", null, false, null, "Nguyễn Thị Mai", null, "$2a$12$X/jrL8k3Jg3dIlF1/WTuweIlKawz1Er.pjdpJQRBeY0zYkDZ4A45G", "0907654321", null, null, 3, 1, null, null },
-                    { 20, null, new DateTime(2025, 5, 19, 21, 15, 35, 253, DateTimeKind.Utc).AddTicks(4474), "Staff7@gmail.com", null, false, null, "Bùi Văn Hậu", null, "$2a$12$d7467t0P10skc/seoE1NfO81TIM05c.fZfHZdNHRzO9zteKxAWYH6", "0912345678", null, null, 3, 2, null, null },
-                    { 21, null, new DateTime(2025, 5, 19, 21, 15, 35, 507, DateTimeKind.Utc).AddTicks(5122), "Staff8@gmail.com", null, false, null, "Trương Thị Lan", null, "$2a$12$FaeBWItWSfDTwE0G/zpZ1.f7bOU0mAUF30/pTsqtgbZytZSwScaHy", "0918765432", null, null, 3, 2, null, null }
+                    { 1, null, new DateTime(2025, 6, 5, 11, 54, 0, 125, DateTimeKind.Utc).AddTicks(3274), "Admin@gmail.com", null, false, null, "Owner", null, "$2a$12$lD.RQ6xpVmUc8ZHlmF45guTL1v8bGh49Sa0wlFsuX/Uzn3E7j9XVi", "987654321", null, null, 1, null, null, null },
+                    { 2, null, new DateTime(2025, 6, 5, 11, 54, 0, 362, DateTimeKind.Utc).AddTicks(6888), "Manager1@gmail.com", null, false, null, "Nguyễn Văn Quân", null, "$2a$12$Og9kEk042wvPZvLY5lko0.57DoBxMVK77EJeKCLU2gPiDJSfUSg.e", "999999999", null, null, 2, null, null, null },
+                    { 3, null, new DateTime(2025, 6, 5, 11, 54, 0, 604, DateTimeKind.Utc).AddTicks(7284), "Manager2@gmail.com", null, false, null, "Trần Thị Thu", null, "$2a$12$ja01.f1MnKPIGXj4IUtBFezXsOi1Wd0UUjOWyZ03DXbFgixzCdUIe", "888888888", null, null, 2, null, null, null },
+                    { 4, null, new DateTime(2025, 6, 5, 11, 54, 0, 845, DateTimeKind.Utc).AddTicks(7846), "Staff1@gmail.com", null, false, null, "Lê Minh Hoàng", null, "$2a$12$Hdgj274I/0LpItDvymnufuSoebHJ3lLDWGxBD2zcNseYtUFeVTcwa", "777777777", null, null, 3, 1, null, 127 },
+                    { 5, null, new DateTime(2025, 6, 5, 11, 54, 1, 85, DateTimeKind.Utc).AddTicks(3812), "Staff2@gmail.com", null, false, null, "Phạm Thị Hằng", null, "$2a$12$36JURw9bENrH8QR/k1he3OuQkq0NJA8DOnGM/VUU4/wJHx3t6P26q", "666666666", null, null, 3, 1, null, 127 },
+                    { 6, null, new DateTime(2025, 6, 5, 11, 54, 1, 324, DateTimeKind.Utc).AddTicks(8668), "Staff3@gmail.com", null, false, null, "Ngô Văn Cường", null, "$2a$12$59ZgAXrZBgXubQObPwAkQ.AS68LBJySQkv/7dO4h2ov4GxYxQ4R9e", "555555555", null, null, 3, 2, null, 127 },
+                    { 7, null, new DateTime(2025, 6, 5, 11, 54, 1, 561, DateTimeKind.Utc).AddTicks(8844), "Staff4@gmail.com", null, false, null, "Đinh Thị Hà", null, "$2a$12$cwZTVGngKjLq9TNjamiyPO39HDU8nJQPa5AJGEFgcTRASh7QS7YCK", "444444444", null, null, 3, 2, null, 127 },
+                    { 8, null, new DateTime(2025, 6, 5, 11, 54, 2, 755, DateTimeKind.Utc).AddTicks(939), "Customer1@gmail.com", null, false, null, "Đặng Văn Nam", null, "$2a$12$OilyTfE/8v1cns05Ha7wbOhWxDc4XizY/ZHm2AkluVdMpEL2tWZ8u", "333333333", null, null, 4, null, null, null },
+                    { 9, null, new DateTime(2025, 6, 5, 11, 54, 3, 0, DateTimeKind.Utc).AddTicks(436), "Customer2@gmail.com", null, false, null, "Lý Thị Ngọc", null, "$2a$12$PFbejCYu9FIUVvsDPqiO0OdcW5piR8gbpw8eD6D9ND3g2.WcNbZfW", "222222222", null, null, 4, null, null, null },
+                    { 10, null, new DateTime(2025, 6, 5, 11, 54, 3, 248, DateTimeKind.Utc).AddTicks(3399), "Customer3@gmail.com", null, false, 200.0, "Phan Minh Đức", null, "$2a$12$ukX4Rkiz4xJM/jKlQG5b2Om7nTZbXr5A93rB0NX0x8.d7CiDK9E2i", "111111111", null, null, 4, null, null, null },
+                    { 18, null, new DateTime(2025, 6, 5, 11, 54, 1, 801, DateTimeKind.Utc).AddTicks(6018), "Staff5@gmail.com", null, false, null, "Võ Anh Dũng", null, "$2a$12$XYzVfjiavoJBWVPh.chBdufCe08OHFA22/jZcSH39tqMzmgFiUueW", "901234567", null, null, 3, 1, null, 127 },
+                    { 19, null, new DateTime(2025, 6, 5, 11, 54, 2, 41, DateTimeKind.Utc).AddTicks(608), "Staff6@gmail.com", null, false, null, "Nguyễn Thị Mai", null, "$2a$12$uwWvuvUGyPtzPIBMHTed4u/cgzaMdPqoapg6oj7UGDfS9QdJtQSSe", "907654321", null, null, 3, 1, null, 127 },
+                    { 20, null, new DateTime(2025, 6, 5, 11, 54, 2, 280, DateTimeKind.Utc).AddTicks(5911), "Staff7@gmail.com", null, false, null, "Bùi Văn Hậu", null, "$2a$12$/a9pqWea73ro46qWeAucVe.PiI9dyyI.2BictJwWIEydJG3foEOo.", "912345678", null, null, 3, 2, null, 127 },
+                    { 21, null, new DateTime(2025, 6, 5, 11, 54, 2, 518, DateTimeKind.Utc).AddTicks(4052), "Staff8@gmail.com", null, false, null, "Trương Thị Lan", null, "$2a$12$JyWDKs7EedwXl5GVksfZ3OHsGonEykoRH73GwJ/T5gzlUOYYn/n.K", "918765432", null, null, 3, 2, null, 127 }
                 });
 
             migrationBuilder.InsertData(
@@ -1365,11 +1375,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "UtensilId", "CreatedAt", "Description", "ImageURL", "IsDelete", "LastMaintainDate", "Material", "Name", "Price", "Quantity", "Status", "UpdatedAt", "UtensilTypeId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6528), "Bộ 5 đôi đũa tre truyền thống.", "https://example.com/images/bamboo-chopsticks.jpg", false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6529), "Tre", "Bộ Đũa Tre", 320000m, 100, true, null, 1 },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6539), "Muỗng thép không gỉ bền chắc để múc nước lẩu.", "https://example.com/images/steel-ladle.jpg", false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6539), "Thép Không Gỉ", "Muỗng Lẩu Thép Không Gỉ", 245000m, 75, true, null, 2 },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6541), "Vợt lưới mịn để vớt thức ăn từ nồi lẩu.", "https://example.com/images/mesh-strainer.jpg", false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6541), "Thép Không Gỉ", "Vợt Lưới Kim Loại", 195000m, 80, true, null, 3 },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6543), "Bộ 4 bát gốm cho phần ăn cá nhân.", "https://example.com/images/ceramic-bowls.jpg", false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6543), "Gốm", "Bộ Bát Ăn Gốm", 490000m, 50, true, null, 4 },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6545), "Bộ 6 đĩa melamine bền chắc cho bữa ăn lẩu.", "https://example.com/images/melamine-plates.jpg", false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6545), "Melamine", "Đĩa Melamine", 610000m, 60, true, null, 5 }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(849), "Bộ 5 đôi đũa tre truyền thống.", "https://example.com/images/bamboo-chopsticks.jpg", false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(850), "Tre", "Bộ Đũa Tre", 320000m, 100, true, null, 1 },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(949), "Muỗng thép không gỉ bền chắc để múc nước lẩu.", "https://example.com/images/steel-ladle.jpg", false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(949), "Thép Không Gỉ", "Muỗng Lẩu Thép Không Gỉ", 245000m, 75, true, null, 2 },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(952), "Vợt lưới mịn để vớt thức ăn từ nồi lẩu.", "https://example.com/images/mesh-strainer.jpg", false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(953), "Thép Không Gỉ", "Vợt Lưới Kim Loại", 195000m, 80, true, null, 3 },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(955), "Bộ 4 bát gốm cho phần ăn cá nhân.", "https://example.com/images/ceramic-bowls.jpg", false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(955), "Gốm", "Bộ Bát Ăn Gốm", 490000m, 50, true, null, 4 },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(957), "Bộ 6 đĩa melamine bền chắc cho bữa ăn lẩu.", "https://example.com/images/melamine-plates.jpg", false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(958), "Melamine", "Đĩa Melamine", 610000m, 60, true, null, 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -1377,41 +1387,41 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "DamageDeviceId", "CreatedAt", "Description", "FinishDate", "HotPotInventoryId", "IsDelete", "LoggedDate", "Name", "Status", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7049), "Tay cầm của nồi lẩu bị gãy và cần được thay thế.", null, 15, false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7052), "Tay Cầm Bị Gãy", 1, null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7053), "Đế của nồi lẩu bị nứt và cần được thay thế.", null, 10, false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7053), "Đế Nồi Bị Nứt", 2, null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7054), "Nắp của nồi lẩu bị hư hỏng và cần được thay thế.", null, 9, false, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(7055), "Nắp Nồi Hư Hỏng", 3, null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5262), "Tay cầm của nồi lẩu bị gãy và cần được thay thế.", null, 15, false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5266), "Tay Cầm Bị Gãy", 1, null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5268), "Đế của nồi lẩu bị nứt và cần được thay thế.", null, 10, false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5269), "Đế Nồi Bị Nứt", 2, null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5270), "Nắp của nồi lẩu bị hư hỏng và cần được thay thế.", null, 9, false, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5271), "Nắp Nồi Hư Hỏng", 3, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "IngredientBatchs",
-                columns: new[] { "IngredientBatchId", "BatchNumber", "BestBeforeDate", "CreatedAt", "IngredientId", "InitialQuantity", "IsDelete", "ReceivedDate", "RemainingQuantity", "UpdatedAt" },
+                columns: new[] { "IngredientBatchId", "BatchNumber", "BestBeforeDate", "CreatedAt", "IngredientId", "InitialQuantity", "IsDelete", "ProvideCompany", "ReceivedDate", "RemainingQuantity", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, "BEEF-2025-04-01", new DateTime(2025, 6, 2, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6913), 1, 50, false, new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 50, null },
-                    { 2, "BEEF-2025-04-15", new DateTime(2025, 6, 9, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6917), 1, 30, false, new DateTime(2025, 5, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 3, "LAMB-2025-04-01", new DateTime(2025, 6, 2, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6926), 2, 40, false, new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 40, null },
-                    { 4, "PORK-2025-04-01", new DateTime(2025, 5, 29, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6928), 3, 45, false, new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 45, null },
-                    { 5, "SHRIMP-2025-04-01", new DateTime(2025, 5, 26, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6929), 4, 35, false, new DateTime(2025, 5, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 35, null },
-                    { 6, "FISHBALL-2025-04-01", new DateTime(2025, 6, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6931), 5, 60, false, new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 60, null },
-                    { 7, "SQUID-2025-04-01", new DateTime(2025, 5, 26, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6932), 6, 30, false, new DateTime(2025, 5, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 8, "CABBAGE-2025-04-01", new DateTime(2025, 5, 24, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6934), 7, 40, false, new DateTime(2025, 5, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 40, null },
-                    { 9, "SPINACH-2025-04-01", new DateTime(2025, 5, 23, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6935), 8, 35, false, new DateTime(2025, 5, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 35, null },
-                    { 10, "CORN-2025-04-01", new DateTime(2025, 5, 26, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6937), 9, 30, false, new DateTime(2025, 5, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 11, "UDON-2025-04-01", new DateTime(2025, 7, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6938), 10, 50, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 50, null },
-                    { 12, "GLASS-2025-04-01", new DateTime(2025, 8, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6940), 11, 45, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 45, null },
-                    { 13, "RAMEN-2025-04-01", new DateTime(2025, 7, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6941), 12, 55, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 55, null },
-                    { 14, "TOFU-2025-04-01", new DateTime(2025, 5, 26, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6943), 13, 40, false, new DateTime(2025, 5, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 40, null },
-                    { 15, "FRIEDTOFU-2025-04-01", new DateTime(2025, 6, 2, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6944), 14, 35, false, new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 35, null },
-                    { 16, "SHIITAKE-2025-04-01", new DateTime(2025, 5, 29, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6945), 15, 30, false, new DateTime(2025, 5, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 17, "ENOKI-2025-04-01", new DateTime(2025, 5, 26, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6947), 16, 35, false, new DateTime(2025, 5, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 35, null },
-                    { 18, "SICHUAN-2025-04-01", new DateTime(2025, 6, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6948), 17, 25, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 25, null },
-                    { 19, "TOMATO-2025-04-01", new DateTime(2025, 6, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6950), 18, 25, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 25, null },
-                    { 20, "MUSHBROTH-2025-04-01", new DateTime(2025, 6, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6951), 19, 25, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 25, null },
-                    { 21, "BONE-2025-04-01", new DateTime(2025, 6, 18, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6952), 20, 25, false, new DateTime(2025, 5, 14, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 25, null },
-                    { 22, "SESAME-2025-04-01", new DateTime(2025, 8, 17, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6954), 21, 30, false, new DateTime(2025, 5, 9, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 23, "GARLICSOY-2025-04-01", new DateTime(2025, 11, 15, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6955), 22, 30, false, new DateTime(2025, 5, 9, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 24, "CHILI-2025-04-01", new DateTime(2025, 11, 15, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6957), 23, 30, false, new DateTime(2025, 5, 9, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null },
-                    { 25, "SHACHA-2025-04-01", new DateTime(2025, 11, 15, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6958), 24, 30, false, new DateTime(2025, 5, 9, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6888), 30, null }
+                    { 1, "BATCH-20250605115403", new DateTime(2025, 6, 19, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1701), 1, 50, false, "FPT", new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 50, null },
+                    { 2, "BATCH-20250605115403", new DateTime(2025, 6, 26, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1703), 1, 30, false, "FPT", new DateTime(2025, 6, 4, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 3, "BATCH-20250605115403", new DateTime(2025, 6, 19, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4965), 2, 40, false, "FPT", new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 40, null },
+                    { 4, "BATCH-20250605115403", new DateTime(2025, 6, 15, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4973), 3, 45, false, "FPT", new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 45, null },
+                    { 5, "BATCH-20250605115403", new DateTime(2025, 6, 12, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4976), 4, 35, false, "FPT", new DateTime(2025, 6, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 35, null },
+                    { 6, "BATCH-20250605115403", new DateTime(2025, 7, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4978), 5, 60, false, "FPT", new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 60, null },
+                    { 7, "BATCH-20250605115403", new DateTime(2025, 6, 12, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4979), 6, 30, false, "FPT", new DateTime(2025, 6, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 8, "BATCH-20250605115403", new DateTime(2025, 6, 10, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4981), 7, 40, false, "FPT", new DateTime(2025, 6, 4, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 40, null },
+                    { 9, "BATCH-20250605115403", new DateTime(2025, 6, 9, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4982), 8, 35, false, "FPT", new DateTime(2025, 6, 4, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 35, null },
+                    { 10, "BATCH-20250605115403", new DateTime(2025, 6, 12, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4984), 9, 30, false, "FPT", new DateTime(2025, 6, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 11, "BATCH-20250605115403", new DateTime(2025, 8, 4, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4985), 10, 50, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 50, null },
+                    { 12, "BATCH-20250605115403", new DateTime(2025, 9, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4987), 11, 45, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 45, null },
+                    { 13, "BATCH-20250605115403", new DateTime(2025, 8, 4, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4989), 12, 55, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 55, null },
+                    { 14, "BATCH-20250605115403", new DateTime(2025, 6, 12, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4991), 13, 40, false, "FPT", new DateTime(2025, 6, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 40, null },
+                    { 15, "BATCH-20250605115403", new DateTime(2025, 6, 19, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4992), 14, 35, false, "FPT", new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 35, null },
+                    { 16, "BATCH-20250605115403", new DateTime(2025, 6, 15, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4994), 15, 30, false, "FPT", new DateTime(2025, 6, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 17, "BATCH-20250605115403", new DateTime(2025, 6, 12, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4995), 16, 35, false, "FPT", new DateTime(2025, 6, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 35, null },
+                    { 18, "BATCH-20250605115403", new DateTime(2025, 7, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4997), 17, 25, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 25, null },
+                    { 19, "BATCH-20250605115403", new DateTime(2025, 7, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(4998), 18, 25, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 25, null },
+                    { 20, "BATCH-20250605115403", new DateTime(2025, 7, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5000), 19, 25, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 25, null },
+                    { 21, "BATCH-20250605115403", new DateTime(2025, 7, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5002), 20, 25, false, "FPT", new DateTime(2025, 5, 31, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 25, null },
+                    { 22, "BATCH-20250605115403", new DateTime(2025, 9, 3, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5004), 21, 30, false, "FPT", new DateTime(2025, 5, 26, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 23, "BATCH-20250605115403", new DateTime(2025, 12, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5005), 22, 30, false, "FPT", new DateTime(2025, 5, 26, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 24, "BATCH-20250605115403", new DateTime(2025, 12, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5007), 23, 30, false, "FPT", new DateTime(2025, 5, 26, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null },
+                    { 25, "BATCH-20250605115403", new DateTime(2025, 12, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(5008), 24, 30, false, "FPT", new DateTime(2025, 5, 26, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1448), 30, null }
                 });
 
             migrationBuilder.InsertData(
@@ -1419,33 +1429,38 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 columns: new[] { "IngredientPriceId", "CreatedAt", "EffectiveDate", "IngredientId", "IsDelete", "Price", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6817), new DateTime(2025, 4, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6819), 1, false, 120000m, null },
-                    { 2, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6827), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6827), 1, false, 135000m, null },
-                    { 3, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6831), new DateTime(2025, 4, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6832), 2, false, 150000m, null },
-                    { 4, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6833), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6833), 2, false, 165000m, null },
-                    { 5, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6834), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6835), 3, false, 95000m, null },
-                    { 6, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6836), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6836), 4, false, 110000m, null },
-                    { 7, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6837), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6838), 5, false, 75000m, null },
-                    { 8, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6839), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6839), 6, false, 90000m, null },
-                    { 9, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6840), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6841), 7, false, 25000m, null },
-                    { 10, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6842), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6842), 8, false, 20000m, null },
-                    { 11, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6843), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6844), 9, false, 18000m, null },
-                    { 12, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6845), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6845), 10, false, 35000m, null },
-                    { 13, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6846), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6847), 11, false, 30000m, null },
-                    { 14, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6848), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6848), 12, false, 32000m, null },
-                    { 15, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6849), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6855), 13, false, 22000m, null },
-                    { 16, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6856), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6857), 14, false, 25000m, null },
-                    { 17, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6858), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6858), 15, false, 45000m, null },
-                    { 18, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6859), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6860), 16, false, 35000m, null },
-                    { 19, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6861), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6861), 17, false, 65000m, null },
-                    { 20, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6862), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6863), 18, false, 55000m, null },
-                    { 21, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6864), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6864), 19, false, 60000m, null },
-                    { 22, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6865), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6866), 20, false, 50000m, null },
-                    { 23, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6866), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6867), 21, false, 40000m, null },
-                    { 24, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6868), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6869), 22, false, 35000m, null },
-                    { 25, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6869), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6870), 23, false, 38000m, null },
-                    { 26, new DateTime(2025, 5, 19, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6871), new DateTime(2025, 5, 16, 21, 15, 36, 598, DateTimeKind.Utc).AddTicks(6871), 24, false, 42000m, null }
+                    { 1, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1313), new DateTime(2025, 5, 6, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1316), 1, false, 120000m, null },
+                    { 2, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1328), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1328), 1, false, 135000m, null },
+                    { 3, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1329), new DateTime(2025, 5, 6, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1330), 2, false, 150000m, null },
+                    { 4, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1331), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1332), 2, false, 165000m, null },
+                    { 5, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1332), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1333), 3, false, 95000m, null },
+                    { 6, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1334), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1334), 4, false, 110000m, null },
+                    { 7, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1335), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1336), 5, false, 75000m, null },
+                    { 8, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1337), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1337), 6, false, 90000m, null },
+                    { 9, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1338), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1339), 7, false, 25000m, null },
+                    { 10, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1339), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1340), 8, false, 20000m, null },
+                    { 11, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1341), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1341), 9, false, 18000m, null },
+                    { 12, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1342), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1343), 10, false, 35000m, null },
+                    { 13, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1344), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1344), 11, false, 30000m, null },
+                    { 14, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1345), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1346), 12, false, 32000m, null },
+                    { 15, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1394), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1408), 13, false, 22000m, null },
+                    { 16, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1409), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1410), 14, false, 25000m, null },
+                    { 17, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1411), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1411), 15, false, 45000m, null },
+                    { 18, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1412), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1413), 16, false, 35000m, null },
+                    { 19, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1413), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1414), 17, false, 65000m, null },
+                    { 20, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1415), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1415), 18, false, 55000m, null },
+                    { 21, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1416), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1417), 19, false, 60000m, null },
+                    { 22, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1418), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1418), 20, false, 50000m, null },
+                    { 23, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1419), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1420), 21, false, 40000m, null },
+                    { 24, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1421), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1421), 22, false, 35000m, null },
+                    { 25, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1422), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1423), 23, false, 38000m, null },
+                    { 26, new DateTime(2025, 6, 5, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1423), new DateTime(2025, 6, 2, 11, 54, 3, 497, DateTimeKind.Utc).AddTicks(1424), 24, false, 42000m, null }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ChatMessages_ChatSessionId",
+                table: "ChatMessages",
+                column: "ChatSessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatMessages_ReceiverUserId",
@@ -1456,11 +1471,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 name: "IX_ChatMessages_SenderUserId",
                 table: "ChatMessages",
                 column: "SenderUserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChatMessages_SessionId",
-                table: "ChatMessages",
-                column: "SessionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ChatSessions_CustomerId",
@@ -1531,11 +1541,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 name: "IX_DamageDevices_HotPotInventoryId",
                 table: "DamageDevices",
                 column: "HotPotInventoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feedback_ApprovedByUserId",
-                table: "Feedback",
-                column: "ApprovedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedback_ManagerId",
@@ -1616,9 +1621,7 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_DiscountId",
                 table: "Orders",
-                column: "DiscountId",
-                unique: true,
-                filter: "[DiscountId] IS NOT NULL");
+                column: "DiscountId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_PreparationStaffId",
@@ -1660,6 +1663,11 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 name: "IX_RentOrderDetails_OrderId",
                 table: "RentOrderDetails",
                 column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RentOrders_VehicleId",
+                table: "RentOrders",
+                column: "VehicleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ReplacementRequests_AssignedStaffId",
@@ -1805,9 +1813,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 name: "IngredientUsages");
 
             migrationBuilder.DropTable(
-                name: "NotificationTemplates");
-
-            migrationBuilder.DropTable(
                 name: "PaymentReceipts");
 
             migrationBuilder.DropTable(
@@ -1850,9 +1855,6 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
                 name: "DamageDevices");
 
             migrationBuilder.DropTable(
-                name: "Vehicles");
-
-            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -1869,6 +1871,9 @@ namespace Capstone.HPTY.RepositoryLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Utensils");
+
+            migrationBuilder.DropTable(
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
                 name: "HotPotInventorys");
