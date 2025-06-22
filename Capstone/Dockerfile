@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
 
 # Build stage
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
+FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS final
 
 # Copy ONLY project files first for efficient caching
 COPY ./Capstone.SRHP.API/*.csproj /source/Capstone.SRHP.API/
@@ -29,4 +30,4 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
 COPY --from=build /app .
 
 # Verify DLL name matches actual output
-ENTRYPOINT ["dotnet", "Capstone.SRHP.API.dll"]  # Changed to SRHP to match project
+ENTRYPOINT ["dotnet", "Capstone.HPTY.API.dll"]  # Match Nixpacks' expected name
