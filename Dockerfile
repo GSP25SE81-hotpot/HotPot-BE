@@ -15,7 +15,7 @@ WORKDIR /src
 COPY ["Capstone/Capstone.SRHP.API/Capstone.HPTY.API.csproj", "Capstone/Capstone.SRHP.API/"]
 COPY ["Capstone/Capstone.SRHP.ServiceLayer/Capstone.HPTY.ServiceLayer.csproj", "Capstone/Capstone.SRHP.ServiceLayer/"]
 COPY ["Capstone/Capstone.SRHP.RepositoryLayer/Capstone.HPTY.RepositoryLayer.csproj", "Capstone/Capstone.SRHP.RepositoryLayer/"]
-COPY ["Capstone/Capstone.SRHP.ModelLayer/Capstone.HPTY.ModelLayer.csproj", "Capstone/Capstone.SRHP.ModelLayer/"]"]
+COPY ["Capstone/Capstone.SRHP.ModelLayer/Capstone.HPTY.ModelLayer.csproj", "Capstone/Capstone.SRHP.ModelLayer/"]
 RUN dotnet restore "Capstone/Capstone.SRHP.API/Capstone.HPTY.API.csproj"
 COPY . .
 WORKDIR "/src/Capstone/Capstone.SRHP.API"
