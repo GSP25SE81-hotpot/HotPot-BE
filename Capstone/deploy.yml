@@ -1,0 +1,70 @@
+name: Deploy .NET to Azure Container Apps
+
+on: [push]
+
+env:
+  APP_NAME: HotpotToYou
+  RESOURCE_GROUP: github-action-rg
+  LOCATION: southeastasia
+  REGISTRY: githubactionregistry${{ github.run_id }}  # Unique name per run
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create Resource Group
+      run: |
+        az group create \
+          --name ${{ env.RESOURCE_GROUP }} \
+          --location ${{ env.LOCATION }} \
+          --output none
+
+    - name: Create Container Registry
+      run: |
+        az acr create \
+          --name ${{ env.REGISTRY }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --sku Basic \
+          --admin-enabled true \
+          --output none
+
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        tags: |
+          ${{ env.REGISTRY }}.azurecr.io/${{ env.APP_NAME }}:latest
+        context: .
+        file: Dockerfile
+
+    - name: Create Container App
+      run: |
+        # Get registry credentials
+        USERNAME=$(az acr credential show \
+          --name ${{ env.REGISTRY }} \
+          --query "username" \
+          --output tsv)
+        PASSWORD=$(az acr credential show \
+          --name ${{ env.REGISTRY }} \
+          --query "passwords[0].value" \
+          --output tsv)
+
+        # Create container app
+        az containerapp create \
+          --name ${{ env.APP_NAME }} \
+          --resource-group ${{ env.RESOURCE_GROUP }} \
+          --image ${{ env.REGISTRY }}.azurecr.io/${{ env.APP_NAME }}:latest \
+          --registry-server ${{ env.REGISTRY }}.azurecr.io \
+          --registry-username $USERNAME \
+          --registry-password "$PASSWORD" \
+          --ingress external \
+          --target-port 80 \
+          --query properties.configuration.ingress.fqdn

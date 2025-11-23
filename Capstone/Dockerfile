@@ -1,33 +1,29 @@
-# syntax=docker/dockerfile:1
-
 # Build stage
-FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
 
-# Copy ONLY project files first for efficient caching
-COPY ./Capstone.SRHP.API/*.csproj /source/Capstone.SRHP.API/
-WORKDIR /source/Capstone.SRHP.API
-RUN dotnet restore
+# Copy project file and restore
+COPY ["Capstone.SRHP.API/Capstone.HPTY.API.csproj", "Capstone.SRHP.API/"]
+RUN dotnet restore "Capstone.SRHP.API/Capstone.HPTY.API.csproj"
 
-# Copy remaining files and build
-COPY . /source/
-RUN dotnet publish -a ${TARGETARCH/amd64/x64} --use-current-runtime --self-contained false -o /app
+# Copy everything else and build
+COPY . .
+RUN dotnet publish "Capstone.SRHP.API/Capstone.HPTY.API.csproj" -c Release -o /app/publish
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-alpine AS final
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
+EXPOSE 80
 
-# Install dependencies
-RUN apk add --no-cache tzdata icu-data-full icu-libs
+# Install ICU for globalization
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends icu-libs && \
+    rm -rf /var/lib/apt/lists/*
 
-# Configure environment
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false \
-    DOTNET_RUNNING_IN_CONTAINER=true \
-    Authentication__Google__ClientId="1029155011338-nk8lq065n5dcld8pojgqu9lfl3kbarh2.apps.googleusercontent.com" \
-    Authentication__Google__ClientSecret="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"
+    ASPNETCORE_URLS=http://+:80
 
 # Copy build output
-COPY --from=build /app .
+COPY --from=build /app/publish .
 
-# Verify DLL name matches actual output
-ENTRYPOINT ["dotnet", "Capstone.HPTY.API.dll"]  # Match Nixpacks' expected name
+ENTRYPOINT ["dotnet", "Capstone.HPTY.API.dll"]
