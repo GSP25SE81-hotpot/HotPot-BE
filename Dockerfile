@@ -12,19 +12,19 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Capstone.SRHP.API/Capstone.HPTY.API.csproj", "Capstone.SRHP.API/"]
-COPY ["Capstone.SRHP.ServiceLayer/Capstone.HPTY.ServiceLayer.csproj", "Capstone.SRHP.ServiceLayer/"]
-COPY ["Capstone.SRHP.RepositoryLayer/Capstone.HPTY.RepositoryLayer.csproj", "Capstone.SRHP.RepositoryLayer/"]
-COPY ["Capstone.SRHP.ModelLayer/Capstone.HPTY.ModelLayer.csproj", "Capstone.SRHP.ModelLayer/"]
-RUN dotnet restore "./Capstone.SRHP.API/Capstone.HPTY.API.csproj"
+COPY ["Capstone/Capstone.SRHP.API/Capstone.HPTY.API.csproj", "Capstone/Capstone.SRHP.API/"]
+COPY ["Capstone/Capstone.SRHP.ServiceLayer/Capstone.HPTY.ServiceLayer.csproj", "Capstone/Capstone.SRHP.ServiceLayer/"]
+COPY ["Capstone/Capstone.SRHP.RepositoryLayer/Capstone.HPTY.RepositoryLayer.csproj", "Capstone/Capstone.SRHP.RepositoryLayer/"]
+COPY ["Capstone/Capstone.SRHP.ModelLayer/Capstone.HPTY.ModelLayer.csproj", "Capstone/Capstone.SRHP.ModelLayer/"]"]
+RUN dotnet restore "Capstone/Capstone.SRHP.API/Capstone.HPTY.API.csproj"
 COPY . .
-WORKDIR "/src/Capstone.SRHP.API"
-RUN dotnet build "./Capstone.HPTY.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/Capstone/Capstone.SRHP.API"
+RUN dotnet build "Capstone.HPTY.API.csproj" -c Release -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Capstone.HPTY.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Capstone.HPTY.API.csproj" -c Release -o /app/publish
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
