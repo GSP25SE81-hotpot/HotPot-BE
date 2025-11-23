@@ -53,9 +53,9 @@ namespace Capstone.HPTY.API.AppStarts
             // Database
             services.AddDbContext<HPTYContext>(options =>
             {
-                var connectionString = configuration.GetConnectionString("Local");
+                //var connectionString = configuration.GetConnectionString("Local");
                 //var connectionString = configuration.GetConnectionString("Server");
-                //var connectionString = configuration.GetConnectionString("DefaultConnection");
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString,
                     sqlOptions => sqlOptions.EnableRetryOnFailure());
             });
